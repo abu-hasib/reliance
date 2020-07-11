@@ -5,14 +5,22 @@ import queryString from 'querystring';
  * @exports ApiService
  */
 
- const BASE_URL = "https://pro-zone.herokuapp.com";
+const BASE_URL = 'https://pro-zone.herokuapp.com';
+
+let token =
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNTk0MTgzMzUwLCJleHAiOjE1OTY3NzUzNTB9.SS17FWeuomLQxAqyIEiPk0hTjLcKjh91XpM6U2X7dkM';
+
+const headers = new Headers();
+
+headers.append('Content-Type', 'application/json; charset=utf-8');
+headers.append('Accept', 'application/json');
+headers.append('Authorization', `Bearer ${token}`);
 
 class ApiService {
   static ENDPOINTS = {
     providers: `${BASE_URL}/providers`,
-    imageUpload: `${BASE_URL}/upload`
-
-  }
+    imageUpload: `${BASE_URL}/upload`,
+  };
 
   /**
    * @method get
@@ -24,11 +32,15 @@ class ApiService {
 
   static async get(url, data) {
     const response = await fetch(
-      `${url}${data ? `?${queryString.stringify(data)}` : ''}`
+      `${url}${data ? `?${queryString.stringify(data)}` : ''}`,
+      {
+        method: 'GET',
+        mode: 'cors',
+        headers,
+      }
     );
     return response.json();
   }
-
 
   /**
    * @method post
@@ -39,12 +51,10 @@ class ApiService {
    */
 
   static async post(url, data) {
-    const response = await fetch(
-      url, {
-        method: 'POST',
-        body: data
-      }
-    );
+    const response = await fetch(url, {
+      method: 'POST',
+      body: data,
+    });
     return response.json();
   }
 }
